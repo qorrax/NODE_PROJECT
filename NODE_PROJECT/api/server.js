@@ -1,14 +1,14 @@
 
-import express from 'express';
+import express, {json} from 'express';
 
-import AdminRouter from './admin.js';
+import adminRouter from './admin.js';
 
 const server = express();
 
-server.use(express.json());
+server.use(json());
 
 
-server.use('api/admin', AdminRouter);
+server.use('/api/admin', adminRouter);
 
 
 export default server;
