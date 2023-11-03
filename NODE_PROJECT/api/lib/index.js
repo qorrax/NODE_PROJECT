@@ -1,10 +1,10 @@
 
-import express, {json} from 'express';
+// set up prisma client
 
 
-// create route here
+import { PrismaClient } from '@prisma/client';
 
-const router = express.Router();
+const prisma = new PrismaClient();
 
+export default prisma;
 
-export default router;
