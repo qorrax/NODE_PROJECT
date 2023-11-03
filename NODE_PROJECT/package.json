@@ -4,15 +4,17 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "nodemon index.js",
-    "server": "nodemon index.js"
+    "start": "nodemon index.js"
   },
   "keywords": [],
   "author": "qorrax",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.18.2",
-    "nodemon": "^3.0.1"
+    "express": "^4.18.2"
   },
-  "description": ""
+  "description": "",
+  "devDependencies": {
+    "nodemon": "^3.0.1",
+    "prisma": "^5.5.2"
+  }
 }
