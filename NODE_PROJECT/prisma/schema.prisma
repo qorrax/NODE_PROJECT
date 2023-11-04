@@ -19,6 +19,8 @@ model Admin {
   id       Int    @id @default(autoincrement())
   username String
   password String
+  created  DateTime @default(now())
+  updated  DateTime @default(now())
   // Add any other fields specific to the Admin model
 }
 
@@ -27,6 +29,8 @@ model Company {
   name     String
   email    String
   password String
+  created  DateTime @default(now())
+  updated  DateTime @default(now())
   jobs     Job[]
   // Add any other fields specific to the Company model
 }
@@ -38,6 +42,8 @@ model Job {
   description String
   location  String
   salary    Int
+  created   DateTime  @default(now())
+  updated   DateTime  @default(now())
   company   Company @relation(fields: [companyId], references: [id])
   applications Application[]
   // Add any other fields specific to the Job model
@@ -48,6 +54,8 @@ model User {
   name         String
   email        String   @unique
   password     String
+  created      DateTime   @default(now())
+  updated      DateTime   @default(now())
   applications Application[]
   
   // Add any other fields specific to the User model
@@ -57,6 +65,8 @@ model Application {
   id     Int   @id @default(autoincrement())
   userId Int
   jobId  Int
+  created DateTime @default(now())
+  updated DateTime @default(now())
   user   User   @relation(fields: [userId], references: [id])
   job    Job    @relation(fields: [jobId], references: [id])
   // Add any other fields specific to the Application model
@@ -65,5 +75,7 @@ model Application {
 model AppliedJob {
   id   Int   @id @default(autoincrement())
   jobId Int   @unique
+  created DateTime @default(now())
+  updated DateTime @default(now())
   // Add any other fields specific to the AppliedJob model
 }
