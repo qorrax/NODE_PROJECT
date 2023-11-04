@@ -5,7 +5,7 @@ const router = express.Router();
 
 // create route here
 router.get('/', (req, res) => {
-    res.send("Hello from admin route");
+    res.send("Hello world from admin.js");
 });
 
 

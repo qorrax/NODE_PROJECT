@@ -1,0 +1,69 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url     =  "file:./dev.db"
+}
+
+
+// create model for admin,applications, appliedJobs, jobs and users
+
+
+
+model Admin {
+  id       Int    @id @default(autoincrement())
+  username String
+  password String
+  // Add any other fields specific to the Admin model
+}
+
+model Company {
+  id       Int    @id @default(autoincrement())
+  name     String
+  email    String
+  password String
+  jobs     Job[]
+  // Add any other fields specific to the Company model
+}
+
+model Job {
+  id        Int       @id @default(autoincrement())
+  companyId Int
+  title     String
+  description String
+  location  String
+  salary    Int
+  company   Company @relation(fields: [companyId], references: [id])
+  applications Application[]
+  // Add any other fields specific to the Job model
+}
+
+model User {
+  id           Int        @id @default(autoincrement())
+  name         String
+  email        String   @unique
+  password     String
+  applications Application[]
+  
+  // Add any other fields specific to the User model
+}
+
+model Application {
+  id     Int   @id @default(autoincrement())
+  userId Int
+  jobId  Int
+  user   User   @relation(fields: [userId], references: [id])
+  job    Job    @relation(fields: [jobId], references: [id])
+  // Add any other fields specific to the Application model
+}
+
+model AppliedJob {
+  id   Int   @id @default(autoincrement())
+  jobId Int   @unique
+  // Add any other fields specific to the AppliedJob model
+}
