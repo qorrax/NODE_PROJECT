@@ -25,6 +25,23 @@ async function seed() {
         await prisma.$disconnect();
     }
 
+    await prisma.application.create({
+
+        data: {
+
+            "id": 2,
+            "userId": 2,
+            "jobId": 2,
+
+
+
+
+
+    }});
+        
+
+
+
 }
 
 seed();
