@@ -3,129 +3,97 @@ import express from 'express';
 import prisma from "./lib/index.js";
 const router = express.Router();
 
+import bcrypt from "bcrypt";
+// import jwt from "jsonwebtoken";
+
 // create route here
-router.get('/', async (req, res) => {
+// router.get('/', async (req, res) => {
 
-   try {
-       const admins = await prisma.admin.findMany();
-        if(admins.length === 0) {
-            return res.status(404).json({ message: "No admins found!"});
-        }
-        res.json(admins);
+//    try {
+//        const admins = await prisma.admin.findMany();
+//         if(admins.length === 0) {
+//             return res.status(404).json({ message: "hello there are no admins in the database"});
+//         }
+//         res.json(admins);
         
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
+//     } catch (error) {
+//         res.status(500).json({ message: error.message });
+//     }
 
-    router.get("/:id", async (req, res) => {
+//     router.get("/:id", async (req, res) => {
 
        
+//         try {
+//             const { id } = req.params;
+//             const admin = await prisma.admin.findUnique({
+//                 where: {
+//                     id: Number(id),
+//                 },
+//             });
+//             if (!admin) {
+//                 return res.status(404).json({ message: "Admin not found!" });
+//             }
+//             res.json(admin);
+//         } catch (error) {
+//             res.status(500).json({ message: error.message });
+//         }
+//     });
+
+ 
+
+ // admin signup route here
+
+    router.post("/signup", async (req, res) => {
+        const {name, email, password} = req.body;
+
         try {
-            const { id } = req.params;
-            const admin = await prisma.admin.findUnique({
+
+         const existingAdmin  = await prisma.admin.findUnique({
                 where: {
-                    id: Number(id),
+                    email: email,             
+                
                 },
             });
-            if (!admin) {
-                return res.status(404).json({ message: "Admin not found!" });
-            }
-            res.json(admin);
-        } catch (error) {
-            res.status(500).json({ message: error.message });
-        }
-    });
-
-});
-
- // find unique route here
-
-    router.get("/:id", async (req, res) => {
-
-
-        try {
-
-            const { id } = req.params;
-            const admin = await prisma.admin.findUnique({
-                where: {
-                    id: Number(id),
-                },
+            if (existingAdmin) {
+                return res.status(404).json({ 
+                message: "Admin already existing!" 
             });
-            if (!admin) {
-                return res.status(404).json({ message: "Admin not found!" });
             }
-            res.json(admin);
-        } catch (error) {
-            res.status(500).json({ message: error.message });
-        }
-    });
 
+                // hash password
 
+                const hashedPassword= await bcrypt.hash(password, 10);
 
+                // create admin
 
-// create post route here
+                const newAdmin = await prisma.admin.create({
+                    data: {
+                        name: name,
+                        email: email,
+                        password: hashedPassword,
+                    },
+                });
 
-
-router.post('/create_admin', async (req, res) => {
-
-    try {
-        const { username, password } = req.body;
-        const admin = await prisma.admin.create({
-            data: {
-            
-                username,
-                password,
-            },
-        });
+                return res.status(201).json({
+                message: "Admin created successfully",
+                admin: newAdmin,
+                });
+            } catch (error) {
+                res.status(500).json({ 
+                message: "Something went wrong",
+                error: error.message,
+                });
         
-        if (!admin) {
-            return res.status(400).json({ message: "Admin not created!" });
-        }
-        res.json({message: "admin was created suceesfully", admin} );
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-
-
-    // create put route here
-
-    router.pu("/update_admin/:id", async (req, res) => {
-        try {
-            const { id } = req.params;
-            const {username} = req.body;              
-            const admin = await prisma.admin.update({
-                where: {
-                    id: Number(id),
-                },
-            });
-            if (!admin) {
-                return res.status(404).json({ message: "Admin was not updated!" });
-            }
-            res.json(admin);
-        } catch (error) {
-            res.status(500).json({ message: error.message });
         }
     });
+                
+        
+
+        
+    
 
 
-    // create delete route here
 
-    router.delete("/delete_admin/:id", async (req, res) => {
-        try {
-            const { id } = req.params;
-            const admin = await prisma.admin.delete({
-                where: {
-                    id: Number(id),
-                },
-            });
-            if (!admin) {
-                return res.status(404).json({ message: "Admin was not found!" });
-            }
-            res.json({message: "admin was deleted successfully",admin});
-        } catch (error) {
-            res.status(500).json({ message: error.message });
-        }
-    });
-});
+
 
 export default router;

@@ -16,43 +16,45 @@ datasource db {
 
 
 model Admin {
-  id       Int    @id @default(autoincrement())
-  username String
-  password String
-  created  DateTime @default(now())
-  updated  DateTime @default(now())
+  id           Int   @id @default(autoincrement())
+  name         String
+  email        String  @unique
+  password     String
+  created      DateTime @default(now())
+  updated      DateTime @default(now())
   // Add any other fields specific to the Admin model
 }
 
 model Company {
-  id       Int    @id @default(autoincrement())
-  name     String
-  email    String
-  password String
-  created  DateTime @default(now())
-  updated  DateTime @default(now())
-  jobs     Job[]
+  id           Int    @id @default(autoincrement())
+  name         String  @unique
+  location     String
+  email        String 
+  password     String
+  created      DateTime @default(now())
+  updated      DateTime @default(now())
+  jobs         Job[]
   // Add any other fields specific to the Company model
 }
 
 model Job {
-  id        Int       @id @default(autoincrement())
-  companyId Int
-  title     String
-  description String
-  location  String
-  salary    Int
-  created   DateTime  @default(now())
-  updated   DateTime  @default(now())
-  company   Company @relation(fields: [companyId], references: [id])
+  id            Int       @id @default(autoincrement())
+  companyId     Int       @unique
+  title         String
+  description   String
+  location      String
+  salary        String
+  created       DateTime  @default(now())
+  updated       DateTime  @default(now())
+  company      Company @relation(fields: [companyId], references: [id])
   applications Application[]
   // Add any other fields specific to the Job model
 }
 
 model User {
   id           Int        @id @default(autoincrement())
-  name         String
-  email        String   @unique
+  email        String   
+  username     String   @unique
   password     String
   created      DateTime   @default(now())
   updated      DateTime   @default(now())
@@ -62,20 +64,20 @@ model User {
 }
 
 model Application {
-  id     Int   @id @default(autoincrement())
-  userId Int
-  jobId  Int @ unique
-  created DateTime @default(now())
-  updated DateTime @default(now())
-  user   User   @relation(fields: [userId], references: [id])
-  job    Job    @relation(fields: [jobId], references: [id])
+  id          Int   @id @default(autoincrement())
+  userId      Int
+  jobId       Int  @unique
+  created     DateTime @default(now())
+  updated     DateTime @default(now())
+  user        User   @relation(fields: [userId], references: [id])
+  job         Job    @relation(fields: [jobId], references: [id])
   // Add any other fields specific to the Application model
 }
 
 model AppliedJob {
-  id   Int   @id @default(autoincrement())
-  jobId Int   @unique
-  created DateTime @default(now())
-  updated DateTime @default(now())
+  id        Int   @id @default(autoincrement())
+  jobId     Int   @unique
+  created   DateTime @default(now())
+  updated   DateTime @default(now())
   // Add any other fields specific to the AppliedJob model
 }

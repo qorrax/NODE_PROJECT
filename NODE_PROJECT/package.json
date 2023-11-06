@@ -6,7 +6,9 @@
   "scripts": {
     "start": "nodemon index.js",
     "server": "nodemon index.js",
-    "prisma-migrate": "npx prisma migrate dev",
+    "studio": "npx prisma studio",
+    "db-push": "npx prisma db push",
+    "prisma-migrate": "npx prisma migrate",
     "seed": "node prisma/seed.js"
   },
   "keywords": [],
