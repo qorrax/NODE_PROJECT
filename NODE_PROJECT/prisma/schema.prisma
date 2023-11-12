@@ -19,9 +19,8 @@ model Admin {
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
 
-  companies   Company[]
-  jobs       Job[]
-
+  jobs      Job[]
+  companies Company[]
 }
 
 model Company {
@@ -32,7 +31,7 @@ model Company {
   adress    String   @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
-  admin     Admin    @relation(fields: [adminId], references: [id])
+  admin     Admin @relation(fields: [adminId], references: [id])
 }
 
 model Job {
@@ -47,7 +46,7 @@ model Job {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @default(now())
 
-  admin       Admin    @relation(fields: [adminId], references: [id])
+  admin       Admin ? @relation(fields: [adminId], references: [id])
 }
 
    

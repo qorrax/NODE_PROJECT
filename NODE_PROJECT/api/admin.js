@@ -4,27 +4,27 @@ import prisma from "./lib/index.js";
 const router = express.Router();
 
 import bcrypt from "bcrypt";
-// import jwt from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 
 
 
-  router.get("/", async (req, res) => {
-    res.send("hello from admin");
-    }
-    );
+//   router.get("/", async (req, res) => {
+//     res.send("waa new admin");
+//     }
+//     );
 
     // create admin route here with bcrypt and use findUnique to check if admin already exists
 
     router.post("/signup", async (req, res) => {
-
         const {name, email, password} = req.body;
 
-        try {
-                
-             const existingAdmin  = await prisma.admin.findUnique({
+        try {   
+            
+           
+            
+         const existingAdmin  = await prisma.admin.findUnique({
                     where: {
-                        email: email,             
-                    
+                        email: email,           
                     },
                 });
                 if (existingAdmin) {
@@ -41,6 +41,7 @@ import bcrypt from "bcrypt";
     
                     const newAdmin = await prisma.admin.create({
                         data: {
+                        
                             name: name,
                             email: email,
                             password: hashedPassword,
@@ -57,59 +58,64 @@ import bcrypt from "bcrypt";
                     error: error.message,
                     });
 
-
         }
     });
 
 
- 
+       
 
- // admin signup route here
+     // create admin login 
 
-    // router.post("/signup", async (req, res) => {
-    //     const {name, email, password} = req.body;
 
-    //     try {
+     router.post("/login", async (req, res ) =>{
 
-    //      const existingAdmin  = await prisma.admin.findUnique({
-    //             where: {
-    //                 email: email,             
-                
-    //             },
-    //         });
-    //         if (existingAdmin) {
-    //             return res.status(404).json({ 
-    //             message: "Admin already existing!" 
-    //         });
-    //         }
+       const {email, password} = req.body;
 
-    //             // hash password
 
-    //             const hashedPassword= await bcrypt.hash(password, 10);
+       try {
 
-    //             // create admin
+        const existingAdmin = await prisma.findUnique({
+            where : {
+                email:email,
 
-    //             const newAdmin = await prisma.admin.create({
-    //                 data: {
-    //                     name: name,
-    //                     email: email,
-    //                     password: hashedPassword,
-    //                 },
-    //             });
+            }
 
-    //             return res.status(201).json({
-    //             message: "Admin created successfully",
-    //             admin: newAdmin,
-    //             });
-    //         } catch (error) {
-    //             res.status(500).json({ 
-    //             message: "Something went wrong",
-    //             error: error.message,
-    //             });
-        
-    //     }
-    // });
-                
+        })
+
+        if(!existingAdmin) {
+
+            return res.status(404).json({
+              messge: "admin not found",
+
+            }),
+        }
+
+        // check if password is correct 
+
+        const isPasswordCorrect = await bcrypt.compare(password, existingAdmin.password);
+
+        if(!isPasswordCorrect) {
+            return res.status(404).json({
+                message: "invalid credintials",
+            });
+        }
+
+        // create a token using jwt
+
+        const token = jwt.sign(
+            {                                                          }
+            
+            )
+
+       
+    
+
+
+
+
+
+
+    
         
 
         
