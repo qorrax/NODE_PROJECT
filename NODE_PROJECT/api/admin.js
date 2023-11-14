@@ -2,6 +2,7 @@
 import express from 'express';
 import prisma from "./lib/index.js";
 const router = express.Router();
+const SECRET_KEY = "secret"
 
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
@@ -67,7 +68,7 @@ import jwt from "jsonwebtoken";
      // create admin login 
 
 
-     router.post("/login", async (req, res ) =>{
+     router.post("/login", async (req, res ) => {
 
        const {email, password} = req.body;
 
@@ -78,17 +79,22 @@ import jwt from "jsonwebtoken";
             where : {
                 email:email,
 
-            }
+            },
 
-        })
+        });
 
         if(!existingAdmin) {
 
             return res.status(404).json({
               messge: "admin not found",
 
-            }),
+            });
         }
+
+
+
+
+
 
         // check if password is correct 
 
@@ -98,16 +104,38 @@ import jwt from "jsonwebtoken";
             return res.status(404).json({
                 message: "invalid credintials",
             });
+
         }
+        
 
         // create a token using jwt
 
         const token = jwt.sign(
-            {                                                          }
+            { id: existingAdmin.id,email: existingAdmin.email },
+            SECRET_KEY,
+            { expiresIn: "1h" }                                                         
             
-            )
+     );
 
-       
+
+            return res.status(200).json({
+                message: "Admin logged in successfully",
+                token: token,
+            });
+         } catch (error) {
+                res.status(500).json({
+                    message: "Something went wrong",
+                    error: error.message,
+                });
+            }
+
+        }
+    );
+
+
+
+
+   
     
 
 
