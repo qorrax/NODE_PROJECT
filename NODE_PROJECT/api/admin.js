@@ -1,7 +1,9 @@
 
 import express from 'express';
 import prisma from "./lib/index.js";
+
 const router = express.Router();
+import { config } from 'dotenv';
 const SECRET_KEY = "secret"
 
 import bcrypt from "bcrypt";
@@ -9,12 +11,40 @@ import jwt from "jsonwebtoken";
 
 
 
-//   router.get("/", async (req, res) => {
-//     res.send("waa new admin");
-//     }
-//     );
+    //get all admins
 
-    // create admin route here with bcrypt and use findUnique to check if admin already exists
+    router.get("/", async (req, res) => {
+        try {
+            const admins = await prisma.admin.findMany();
+            return res.status(200).json(admins);
+        } catch (error) {
+            return res.status(500).json({ error: error.message });
+        }
+    }
+    );
+
+    // get one  admin by id
+
+
+    router.get("/:id", async (req, res) => {
+
+        const { id } = req.params;
+
+        try {
+
+            const admin = await prisma.admin.findUnique({
+                where: {
+                    id: parseInt(id),
+                },
+            });
+            return res.status(200).json(admin);
+        } catch (error) {
+            return res.status(500).json({ error: error.message });
+        }
+    }
+    );
+
+    // create admin signup
 
     router.post("/signup", async (req, res) => {
         const {name, email, password} = req.body;
@@ -75,7 +105,7 @@ import jwt from "jsonwebtoken";
 
        try {
 
-        const existingAdmin = await prisma.findUnique({
+        const existingAdmin = await prisma.admin.findUnique({
             where : {
                 email:email,
 
@@ -134,23 +164,69 @@ import jwt from "jsonwebtoken";
 
 
 
+    // update admin by id
 
-   
-    
-
-
-
-
-
-
-    
+    router.put("/:id", async (req, res) => {
         
+        try {
+
+            const { id } = req.params;
+            const { name, email } = req.body;
+
+            const admin  = await prisma.admin.update({
+                where: {
+                    id: Numer(id),
+                },
+                data: {
+                    name: name,
+                    email: email,
+               },
+            });
+
+            if(!admin) {
+                return res.status(404).json({
+                    message: "Admin not found",
+                });
+            }
+
+            return res.status(200).json({
+                message: "Admin updated successfully",
+                admin: admin,
+            });
+        } catch (error) {
+            return res.status(500).json({ error: error.message });
+        }});
+
+    // delete admin by id
+
+    router.delete("/:id", async (req, res) => {
+        
+        try {
+            const { id } = req.params;
+            const admin  = await prisma.admin.delete({
+                where: {
+                    id: Number(id),
+                },
+            });
+         
+            if(!admin) {
+                return res.status(404).json({
+                    message: "Admin not found",
+                });
+            }
+
+            return res.status(200).json({
+                message: "Admin deleted successfully",
+                admin: admin,
+            });
+        } catch (error) {
+            return res.status(500).json({ error: error.message });
+        }
+
+    });
+
+       
 
         
     
-
-
-
-
-
 export default router;
