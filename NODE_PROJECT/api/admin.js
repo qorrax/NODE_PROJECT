@@ -100,16 +100,13 @@ import jwt from "jsonwebtoken";
 
        const {email, password} = req.body;
 
-
        try {
 
         const existingAdmin = await prisma.admin.findUnique({
             where : {
                 email:email,
 
-            },
-
-        });
+            }, });
 
         if(!existingAdmin) {
 
@@ -118,10 +115,6 @@ import jwt from "jsonwebtoken";
 
             });
         }
-
-
-
-
 
 
         // check if password is correct 
