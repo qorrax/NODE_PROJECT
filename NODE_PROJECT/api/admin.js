@@ -50,10 +50,8 @@ import jwt from "jsonwebtoken";
         const {name, email, password} = req.body;
 
         try {   
-            
-           
-            
-         const existingAdmin  = await prisma.admin.findUnique({
+         
+        const existingAdmin  = await prisma.admin.findUnique({
                     where: {
                         email: email,           
                     },

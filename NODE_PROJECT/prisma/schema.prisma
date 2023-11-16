@@ -68,7 +68,7 @@ model Application {
 
   id        Int      @id @default(autoincrement())
   userId    Int
-  jobId     Int
+  jobId     Int   @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
   user      User     @relation(fields: [userId], references: [id])
