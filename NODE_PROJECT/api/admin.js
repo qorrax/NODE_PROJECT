@@ -162,30 +162,25 @@ import e from 'express';
         
         try {
 
-            const { id } = req.params;
-            const { name,email} = req.body;
+         
 
             const admin  = await prisma.admin.update({
                 where: {
-                    id: Numer(id),
+                    id: Numer(req.params.id),
                 },
-                data: {
-                    name: name,
-                    email: email,
-                    
-               },
+                data: req.body,
             });
 
-            if(!admin) {
+            if(admin) {
+                return res.status(200).json({
+                    message: "Admin was updated successfully",
+                });
+            }  else {
+
                 return res.status(404).json({
                     message: "Admin not found",
                 });
             }
-
-            return res.status(200).json({
-                message: "Admin updated successfully",
-                admin: admin,
-            });
         } catch (error) {
             return res.status(500).json({ error: error.message });
         }});
