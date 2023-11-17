@@ -8,6 +8,7 @@ const SECRET_KEY = "secret"
 
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import e from 'express';
 
 
 
@@ -162,7 +163,7 @@ import jwt from "jsonwebtoken";
         try {
 
             const { id } = req.params;
-            const { name, email } = req.body;
+            const { name,email} = req.body;
 
             const admin  = await prisma.admin.update({
                 where: {
@@ -171,6 +172,7 @@ import jwt from "jsonwebtoken";
                 data: {
                     name: name,
                     email: email,
+                    
                },
             });
 
@@ -193,28 +195,32 @@ import jwt from "jsonwebtoken";
     router.delete("/:id", async (req, res) => {
         
         try {
-            const { id } = req.params;
+           
             const admin  = await prisma.admin.delete({
                 where: {
-                    id: Number(id),
+                    id: Number(req.params.id),
                 },
             });
          
-            if(!admin) {
+            if(admin) {
+                return res.status(200).json({
+                    message: "Admin was deleted successfully",
+                });
+            }  else {
                 return res.status(404).json({
                     message: "Admin not found",
                 });
             }
 
-            return res.status(200).json({
-                message: "Admin deleted successfully",
-                admin: admin,
-            });
+           
         } catch (error) {
             return res.status(500).json({ error: error.message });
         }
 
     });
+
+
+
 
        
 
