@@ -48,11 +48,11 @@ import e from 'express';
     // create admin signup
 
     router.post("/signup", async (req, res) => {
-        const {name, email, password} = req.body;
+        const {name, email, password, } = req.body;
 
         try {   
          
-        const existingAdmin  = await prisma.admin.findUnique({
+        const existingAdmin  = await prisma.user.findUnique({
                     where: {
                         email: email,           
                     },
@@ -69,12 +69,13 @@ import e from 'express';
     
                     // create admin
     
-                    const newAdmin = await prisma.admin.create({
+                    const newAdmin = await prisma.user.create({
                         data: {
                         
                             name: name,
                             email: email,
                             password: hashedPassword,
+                            role: "ADMIN",
                         },
                     });
     
@@ -103,7 +104,7 @@ import e from 'express';
 
        try {
 
-        const existingAdmin = await prisma.admin.findUnique({
+        const existingAdmin = await prisma.user.findUnique({
             where : {
                 email:email,
 
@@ -133,7 +134,7 @@ import e from 'express';
         // create a token using jwt
 
         const token = jwt.sign(
-            { id: existingAdmin.id,email: existingAdmin.email },
+            { id: existingAdmin.id,email: existingAdmin.email, role: existingAdmin.role },
             SECRET_KEY,
             { expiresIn: "1h" }                                                         
             
@@ -166,9 +167,13 @@ import e from 'express';
 
             const admin  = await prisma.admin.update({
                 where: {
-                    id: Numer(req.params.id),
+                    id: Number(req.params.id),
                 },
-                data: req.body,
+                data: {
+                    name: req.body.name,
+                    email: req.body.email,
+                    
+                },
             });
 
             if(admin) {

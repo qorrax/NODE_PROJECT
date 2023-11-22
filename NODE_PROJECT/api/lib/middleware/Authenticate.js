@@ -2,7 +2,7 @@
 
 
 import jwt from "jsonwebtoken";
-import  SECRET_KEY  from  process.env.SECRET_KEY;
+const SECRET_KEY = "secret";
 
 
 function authenticate(req, res, next) {
